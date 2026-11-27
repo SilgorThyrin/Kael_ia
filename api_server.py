@@ -8,14 +8,23 @@ def _kael_explorar_pastas_local(msg: str) -> tuple[str, str]:
     bloqueados = ("/system", "/proc", "/sys", "/dev")
     if any(str(alvo).startswith(b) for b in bloqueados):
         return "Verificando política de segurança...", "Acesso bloqueado apenas para partições protegidas do sistema (/system, /proc, /sys)."
-    itens = sorted(alvo.iterdir(), key=lambda p: (not p.is_dir(), p.name.lower()))[:60]
+    try:
+        itens = sorted(alvo.iterdir(), key=lambda p: (not p.is_dir(), p.name.lower()))[:60]
+    except PermissionError:
+        return (
+            f"Tentando ler {alvo}... Permissão negada pelo Android.",
+            f"O Android bloqueou a listagem direta de `{alvo}` (Scoped Storage). Use `/storage/emulated/0` (ou rode `termux-setup-storage` no Termux)."
+        )
     linhas = ["| Tipo | Nome | Tamanho |", "| --- | --- | --- |"]
     for it in itens:
-        tipo = "Pasta" if it.is_dir() else "Arquivo"
-        tam = "-" if it.is_dir() else f"{it.stat().st_size} B"
+        try:
+            tipo = "Pasta" if it.is_dir() else "Arquivo"
+            tam = "-" if it.is_dir() else f"{it.stat().st_size} B"
+        except Exception:
+            tipo, tam = "Item", "-"
         linhas.append(f"| {tipo} | `{it.name}` | {tam} |")
     pens = f"Acessando diretório {alvo}...\nEncontrados {len(itens)} itens visíveis."
-    resp = f"Conteúdo de `{alvo}`:\n\n" + "\n".join(linhas)
+    resp = f"Conteúdo de `{alvo}` ({len(itens)} itens):\n\n" + "\n".join(linhas)
     return pens, resp
 
 
@@ -2158,7 +2167,7 @@ def kael_chat_stream():
             yield _kael_sse({"type": "thinking", "text": f"Analisando pedido: {msg or '(vazio)'}\n"})
             _kael_set_etapa("pensando e inspecionando")
 
-            if any(k in low for k in ("revisa", "revisar", "analisa", "analisar", "código", "codigo", "codigos", "códigos", "arquivos", "pasta")):
+            if any(k in low for k in ("revisa", "revisar", "analisa", "analisar", "código", "codigo", "codigos", "códigos", "revisar pasta", "revisa a pasta")):
                 alvo = Path.home() / "Projetos" / "Ecos_de_Aethelgard" if ("ecos" in low or "aethelgard" in low or "roblox" in low) else (Path.home() / "Kael_ia")
                 yield _kael_sse({"type": "thinking", "text": f"Alvo definido: {alvo}\nVerificando arquivos Python e scripts Lua/Luau...\n"})
                 _kael_set_etapa("revisando arquivos da pasta")
@@ -2175,7 +2184,7 @@ def kael_chat_stream():
                 yield _kael_sse({"type": "done", "text": res})
                 return
 
-            if any(k in low for k in ("listar pastas", "pastas do celular", "/storage/emulated/0", "/sdcard", "arquivos do celular")):
+            if any(k in low for k in ("listar", "pastas", "diretório", "diretorio", "/storage", "/sdcard", "arquivos do celular")):
                 _p_dir, _r_dir = _kael_explorar_pastas_local(msg)
                 yield _kael_sse({"type": "thinking", "text": _p_dir + "\n"})
                 yield _kael_sse({"type": "content", "text": _r_dir + "\n"})
