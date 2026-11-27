@@ -1,0 +1,133 @@
+{
+  "active_id": "plano_1795628838",
+  "plans": {
+    "plano_1795468036": {
+      "id": "plano_1795468036",
+      "objetivo": "Criar um utilitário de backup robusto e leve para scripts no Termux/Python.",
+      "status": "em_andamento",
+      "criado_em": "2026-11-23 18:07:16",
+      "steps": [
+        {
+          "num": 1,
+          "titulo": "Desenhar a arquitetura do script de backup em Python (origem, destino compactado .zip e rotação de logs).",
+          "status": "concluida",
+          "resumo_curto": "Arquitetura definida: script Python nativo usando zipfile, pathlib e datetime para gerar backups compactados com timestamp.",
+          "detalhes": "Definido o uso da biblioteca padrão shutil para compactação em formato zip, datetime para timestamp nos arquivos de backup e pathlib para manipulação segura de caminhos no Android/Termux.",
+          "arquivos": []
+        },
+        {
+          "num": 2,
+          "titulo": "Implementar o script Python e propor o arquivo no projeto.",
+          "status": "pendente",
+          "resumo_curto": "",
+          "detalhes": "",
+          "arquivos": []
+        },
+        {
+          "num": 3,
+          "titulo": "Testar o script e registrar a tarefa no painel do Kael.",
+          "status": "pendente",
+          "resumo_curto": "",
+          "detalhes": "",
+          "arquivos": []
+        }
+      ]
+    },
+    "plano_1795522063": {
+      "id": "plano_1795522063",
+      "objetivo": "Revisar, limpar e organizar a estrutura da pasta Kael_ia no Termux",
+      "status": "em_andamento",
+      "criado_em": "2026-11-24 09:07:43",
+      "steps": [
+        {
+          "num": 1,
+          "titulo": "Limpeza de arquivos obsoletos na raiz (.bat e .bak)",
+          "status": "pendente",
+          "resumo_curto": "",
+          "detalhes": "",
+          "arquivos": []
+        },
+        {
+          "num": 2,
+          "titulo": "Organização de scripts soltos na raiz para a pasta scripts/ ou core/",
+          "status": "pendente",
+          "resumo_curto": "",
+          "detalhes": "",
+          "arquivos": []
+        },
+        {
+          "num": 3,
+          "titulo": "Verificação de integridade e dependências no requirements.txt",
+          "status": "pendente",
+          "resumo_curto": "",
+          "detalhes": "",
+          "arquivos": []
+        }
+      ]
+    },
+    "plano_1795522519": {
+      "id": "plano_1795522519",
+      "objetivo": "Organizar e limpar a estrutura de pastas do Kael_ia no Termux",
+      "status": "em_andamento",
+      "criado_em": "2026-11-24 09:15:19",
+      "steps": [
+        {
+          "num": 1,
+          "titulo": "Remover arquivos obsoletos da raiz (.bat e .bak)",
+          "status": "pendente",
+          "resumo_curto": "",
+          "detalhes": "",
+          "arquivos": []
+        },
+        {
+          "num": 2,
+          "titulo": "Mover scripts soltos da raiz para a pasta scripts/ ou core/",
+          "status": "pendente",
+          "resumo_curto": "",
+          "detalhes": "",
+          "arquivos": []
+        },
+        {
+          "num": 3,
+          "titulo": "Centralizar arquivos de dados e banco (kael_memory.db, ultimas_mensagens.json) na pasta data/",
+          "status": "pendente",
+          "resumo_curto": "",
+          "detalhes": "",
+          "arquivos": []
+        }
+      ]
+    },
+    "plano_1795628838": {
+      "id": "plano_1795628838",
+      "objetivo": "Organizar a estrutura de arquivos do Kael movendo scripts de sistema e processamento para subpastas dentro de core/",
+      "status": "em_andamento",
+      "criado_em": "2026-11-25 14:47:18",
+      "steps": [
+        {
+          "num": 1,
+          "titulo": "Mover scripts de sistema (kael_system_tools.py, kael_library.py) para core/sistema/",
+          "status": "pendente",
+          "resumo_curto": "",
+          "detalhes": "",
+          "arquivos": []
+        },
+        {
+          "num": 2,
+          "titulo": "Mover scripts de processamento (executor_trabalhadores.py, roteador_trabalhadores.py) para core/processamento/",
+          "status": "pendente",
+          "resumo_curto": "",
+          "detalhes": "",
+          "arquivos": []
+        },
+        {
+          "num": 3,
+          "titulo": "Atualizar referências de importação nos arquivos movidos e nos arquivos da raiz",
+          "status": "pendente",
+          "resumo_curto": "",
+          "detalhes": "",
+          "arquivos": []
+        }
+      ]
+    }
+  }
+}

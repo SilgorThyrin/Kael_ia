@@ -1,0 +1,8 @@
+{
+  "id": "game-development",
+  "name": "Desenvolvimento de jogos",
+  "description": "Transforma o GDD em entregas pequenas, jogáveis e verificáveis.",
+  "version": "1.0",
+  "keywords": ["jogo", "game", "godot", "roblox", "luau", "gdscript", "gdd", "fase", "combate", "missão"],
+  "capabilities": ["read", "project_write", "execute", "studio"]
+}

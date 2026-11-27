@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*.bak*
+*.log
+*.db
+*.sqlite*
+*.gguf
+.env
+data/
+sandbox_testes/candidatos/
+permissoes_kael.json
+config_apis.json
+config/*.local.json

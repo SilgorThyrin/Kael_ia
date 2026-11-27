@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.kael.assist">
+  <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="34" />
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.RECORD_AUDIO" />
+  <uses-permission android:name="com.termux.permission.RUN_COMMAND" />
+  <application android:label="Kael Assist" android:usesCleartextTraffic="true">
+    <activity android:name=".KaelAssistActivity" android:exported="true" android:excludeFromRecents="true">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.ASSIST" />
+        <action android:name="android.intent.action.VOICE_COMMAND" />
+        <category android:name="android.intent.category.DEFAULT" />
+      </intent-filter>
+    </activity>
+    <service android:name=".KaelAssistService" android:exported="true" android:permission="android.permission.BIND_VOICE_INTERACTION">
+      <intent-filter><action android:name="android.service.voice.VoiceInteractionService" /></intent-filter>
+      <meta-data android:name="android.voice_interaction" android:resource="@xml/assist_service" />
+    </service>
+    <service android:name=".KaelAssistSessionService" android:exported="true" android:permission="android.permission.BIND_VOICE_INTERACTION" />
+    <service android:name=".KaelRecognitionService" android:exported="true" android:permission="android.permission.BIND_VOICE_INTERACTION">
+      <intent-filter><action android:name="android.speech.RecognitionService" /></intent-filter>
+      <meta-data android:name="android.speech" android:resource="@xml/recognition_service" />
+    </service>
+  </application>
+</manifest>

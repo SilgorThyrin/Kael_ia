@@ -1,0 +1,10 @@
+{
+  "id": "dev-guard",
+  "name": "Dev Guard & Git",
+  "version": "1.0.0",
+  "description": "Protege dados locais (CPF) na nuvem e expõe status Git ao Gerente.",
+  "enabled": true,
+  "skill_file": "SKILL.md",
+  "tools_module": "tools.py",
+  "hooks_module": "hooks.py"
+}

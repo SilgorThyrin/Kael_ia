@@ -1,0 +1,10 @@
+{
+  "id": "kael-multifuncao",
+  "name": "Kael Multifunções",
+  "version": "1.1.0",
+  "description": "Modos Código, TI, Jogos e execução segura de arquivos e comandos com confirmação.",
+  "enabled": true,
+  "skill_file": "SKILL.md",
+  "tools_module": "tools.py",
+  "hooks_module": "hooks.py"
+}

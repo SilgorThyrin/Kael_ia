@@ -1,0 +1,10 @@
+Projeto Ecos_Aethelgard - gerado pelo Kael
+Gênero: rpg
+
+func _ready():
+    print("Projeto Ecos_Aethelgard iniciado.")
+    initialize_game()
+    
+func initialize_game():
+    # Inicialização do jogo
+    print("Jogo inicializado com sucesso.")

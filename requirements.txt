@@ -1,0 +1,10 @@
+# Kael AI - Core Dependencies
+# ==========================
+# Base libraries for the Kael autonomous agent
+customtkinter>=5.2.0        # Modern UI framework
+flask>=3.0.0                # Web server/API
+flask-cors>=4.0.0           # CORS handling
+duckduckgo-search>=4.1.0    # Web search functionality
+requests>=2.31.0            # HTTP client for Ollama API
+python-dotenv>=1.0.0        # Environment variable management
+ollama>=0.1.0               # Ollama model management

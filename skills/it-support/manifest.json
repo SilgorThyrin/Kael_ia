@@ -1,0 +1,8 @@
+{
+  "id": "it-support",
+  "name": "Suporte técnico de TI",
+  "description": "Diagnóstico gradual e seguro de problemas em Windows, rede e aplicações.",
+  "version": "1.0",
+  "keywords": ["windows", "computador", "pc", "rede", "wifi", "internet", "erro", "driver", "instalar", "suporte"],
+  "capabilities": ["read", "project_write"]
+}

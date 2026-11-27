@@ -1,0 +1,154 @@
+{
+  "next_id": 17,
+  "actions": [
+    {
+      "id": "1",
+      "tipo": "arquivo",
+      "caminho": "/data/data/com.termux/files/home/Kael_ia/Projetos/ola.py",
+      "modo": "criar",
+      "novo_conteudo": "from datetime import datetime\n\ndef main():\n    agora = datetime.now()\n    data_formatada = agora.strftime(\"%d/%m/%Y %H:%M:%S\")\n    print(f\"Olá! A data e hora atual é: {data_formatada}\")\n\nif __name__ == \"__main__\":\n    main()\n",
+      "status": "executada",
+      "turn_id": 3,
+      "criada_em": "2026-11-23 17:19:47"
+    },
+    {
+      "id": "2",
+      "tipo": "comando",
+      "comando": "python ~/Kael_ia/Projetos/ola.py",
+      "diretorio": "/data/data/com.termux/files/home/Kael_ia/Projetos",
+      "status": "executada",
+      "turn_id": 5,
+      "criada_em": "2026-11-23 17:22:55"
+    },
+    {
+      "id": "3",
+      "tipo": "arquivo",
+      "caminho": "/storage/emulated/0/Documents/backup_kael.py",
+      "modo": "criar",
+      "novo_conteudo": "#!/usr/bin/env python3\nimport os\nimport shutil\nfrom datetime import datetime\n\n# Configurações de Backup para o Kael\nORIGEM = os.path.expanduser(\"~/Kael_ia\")\nDESTINO = \"/data/data/com.termux/files/home/storage/shared/Documents/Backup_Kael\"\n\ndef realizar_backup():\n    if not os.path.exists(ORIGEM):\n        print(f\"Diretório de origem não encontrado: {ORIGEM}\")\n        return\n\n    os.makedirs(DESTINO, exist_ok=True)\n    timestamp = datetime.now().strftime(\"%Y%m%d_%H%M%S\")\n    nome_zip = f\"backup_kael_{timestamp}\"\n    \n    caminho_zip = os.path.join(DESTINO, nome_zip)\n    \n    print(f\"Compactando {ORIGEM} para {caminho_zip}.zip...\")\n    shutil.make_archive(caminho_zip, 'zip', ORIGEM)\n    print(f\"Backup concluído com sucesso em: {caminho_zip}.zip\")\n\nif __name__ == \"__main__\":\n    realizar_backup()\n",
+      "status": "executada",
+      "turn_id": 16,
+      "criada_em": "2026-11-23 21:52:54"
+    },
+    {
+      "id": "4",
+      "tipo": "comando",
+      "comando": "ls -la ~/ ~/Projetos /storage/shared/Documents 2>/dev/null",
+      "diretorio": "/data/data/com.termux/files/home/Kael_ia",
+      "status": "executada",
+      "turn_id": 22,
+      "criada_em": "2026-11-24 08:10:53"
+    },
+    {
+      "id": "5",
+      "tipo": "comando",
+      "comando": "mkdir -p ~/Kael_ia/projetos/Ecos_de_Aethelgard",
+      "diretorio": "/data/data/com.termux/files/home/Kael_ia",
+      "status": "executada",
+      "turn_id": 27,
+      "criada_em": "2026-11-24 08:23:22"
+    },
+    {
+      "id": "6",
+      "tipo": "comando",
+      "comando": "find ~/storage/shared -type f -mmin -1440 2>/dev/null | head -n 30",
+      "diretorio": "/data/data/com.termux/files/home/Kael_ia",
+      "status": "executada",
+      "turn_id": 31,
+      "criada_em": "2026-11-24 08:26:27"
+    },
+    {
+      "id": "7",
+      "tipo": "comando",
+      "comando": "ls -la ~/storage/shared/Download",
+      "diretorio": "/data/data/com.termux/files/home/Kael_ia",
+      "status": "pendente",
+      "turn_id": 33,
+      "criada_em": "2026-11-24 08:33:22"
+    },
+    {
+      "id": "8",
+      "tipo": "comando",
+      "comando": "rm -f ~/Kael_ia/abrir_kael.bat ~/Kael_ia/api_server.py.bak",
+      "diretorio": "/data/data/com.termux/files/home/Kael_ia",
+      "status": "pendente",
+      "turn_id": 37,
+      "criada_em": "2026-11-24 09:07:46"
+    },
+    {
+      "id": "9",
+      "tipo": "comando",
+      "comando": "rm -f ~/Kael_ia/abrir_kael.bat ~/Kael_ia/api_server.py.bak",
+      "diretorio": "/data/data/com.termux/files/home/Kael_ia",
+      "status": "pendente",
+      "turn_id": 39,
+      "criada_em": "2026-11-24 09:15:21"
+    },
+    {
+      "id": "10",
+      "tipo": "comando",
+      "comando": "python3 -c \"\nimport glob, os\n\nraiz = '/data/data/com.termux/files/home/Kael_ia'\nprint('--- Limpeza de Backups Antigos ---')\n# Agrupar por prefixo de arquivo .bak\narquivos_bak = glob.glob(os.path.join(raiz, '*.bak*'))\ngrupos = {}\nfor f in arquivos_bak:\n    # Identificar o arquivo original (ex: api_server.py.bak_1 -> api_server.py)\n    base = f.split('.bak')[0]\n    grupos.setdefault(base, []).append(f)\n\nremovidos = 0\nmantidos = 0\nfor base, lista in grupos.items():\n    # Ordenar por data de modificação (mais recente primeiro)\n    lista.sort(key=os.path.getmtime, reverse=True)\n    # Manter apenas os 2 mais recentes\n    passar = lista[:2]\n    excluir = lista[2:]\n    mantidos += len(passar)\n    for f in excluir:\n        os.remove(f)\n        removidos += 1\n        print(f'Removido backup antigo: {os.path.basename(f)}')\n\nprint(f'Total de backups removidos: {removidos}, mantidos recentes: {mantidos}')\n\n# Remover script Windows obsoleto\nbat = os.path.join(raiz, 'abrir_kael.bat')\nif os.path.exists(bat):\n    os.remove(bat)\n    print('Removido arquivo Windows obsoleto: abrir_kael.bat')\n\"",
+      "diretorio": "/data/data/com.termux/files/home/Kael_ia",
+      "status": "executada",
+      "turn_id": 47,
+      "criada_em": "2026-11-25 14:37:47"
+    },
+    {
+      "id": "11",
+      "tipo": "comando",
+      "comando": "mkdir -p core/motores core/visao && mv kael_engine.py core/motores/ && mv kael_vision.py core/visao/",
+      "diretorio": "/data/data/com.termux/files/home/Kael_ia",
+      "status": "executada",
+      "turn_id": 51,
+      "criada_em": "2026-11-25 14:44:29"
+    },
+    {
+      "id": "12",
+      "tipo": "comando",
+      "comando": "mkdir -p core/sistema core/processamento && mv kael_system_tools.py kael_library.py core/sistema/ && mv executor_trabalhadores.py roteador_trabalhadores.py core/processamento/",
+      "diretorio": "/data/data/com.termux/files/home/Kael_ia",
+      "status": "executada",
+      "turn_id": 55,
+      "criada_em": "2026-11-25 14:47:30"
+    },
+    {
+      "id": "13",
+      "tipo": "comando",
+      "comando": "python3 -c \"import api_server; print('Importação básica OK')\"",
+      "diretorio": "/data/data/com.termux/files/home/Kael_ia",
+      "status": "pendente",
+      "turn_id": 57,
+      "criada_em": "2026-11-25 14:48:48"
+    },
+    {
+      "id": "14",
+      "tipo": "arquivo",
+      "caminho": "/data/data/com.termux/files/home/Kael_ia/core/sistema/gerenciador_popups.py",
+      "modo": "criar",
+      "novo_conteudo": "\"\"\"\nGerenciador de Pop-ups e Notificações UI do Kael.\nGarante que solicitações de permissão e ações pendentes apareçam de forma interativa na interface web.\n\"\"\"\nimport json\nimport logging\nfrom pathlib import Path\n\nlogger = logging.getLogger(\"kael_popups\")\n\nclass KaelPopupManager:\n    def __init__(self, base_dir: Path):\n        self.base_dir = base_dir\n        self.popup_file = base_dir / \"data\" / \"pending_popups.json\"\n        self.popup_file.parent.mkdir(parents=True, exist_ok=True)\n        if not self.popup_file.exists():\n            self._save([])\n\n    def _load(self):\n        try:\n            if self.popup_file.exists():\n                return json.loads(self.popup_file.read_text(encoding=\"utf-8\"))\n        except Exception as e:\n            logger.error(f\"Erro ao ler popups: {e}\")\n        return []\n\n    def _save(self, items):\n        try:\n            self.popup_file.write_text(json.dumps(items, ensure_ascii=False, indent=2), encoding=\"utf-8\")\n        except Exception as e:\n            logger.error(f\"Erro ao salvar popups: {e}\")\n\n    def criar_popup(self, titulo: str, mensagem: str, acao_id: str = None, tipo: str = \"confirmacao\"):\n        itens = self._load()\n        novo = {\n            \"id\": f\"pop_{len(itens) + 1}\",\n            \"titulo\": titulo,\n            \"mensagem\": mensagem,\n            \"acao_id\": acao_id,\n            \"tipo\": tipo,\n            \"ativo\": True\n        }\n        itens.append(novo)\n        self._save(itens)\n        return novo[\"id\"]\n\n    def listar_ativos(self):\n        return [p for p in self._load() if p.get(\"ativo\")]\n\n    def fechar_popup(self, popup_id: str):\n        itens = self._load()\n        for p in itens:\n            if p.get(\"id\") == popup_id:\n                p[\"ativo\"] = False\n        self._save(itens)\n\ndef init_popup_manager(base_dir: Path):\n    return KaelPopupManager(base_dir)\n",
+      "status": "executada",
+      "turn_id": 59,
+      "criada_em": "2026-11-25 14:55:38"
+    },
+    {
+      "id": "15",
+      "tipo": "arquivo",
+      "caminho": "/data/data/com.termux/files/home/Kael_ia/core/sistema/gerenciador_popups.py",
+      "modo": "criar",
+      "novo_conteudo": "\"\"\"\nGerenciador de Pop-ups e Notificações Visuais para o Kael\n\"\"\"\nimport json\nfrom pathlib import Path\n\nclass GerenciadorPopups:\n    def __init__(self, base_dir: Path):\n        self.base_dir = base_dir\n        self.notificacoes_pendentes = []\n\n    def adicionar_alerta(self, titulo: str, mensagem: str, tipo: str = \"info\"):\n        alerta = {\n            \"titulo\": titulo,\n            \"mensagem\": mensagem,\n            \"tipo\": tipo\n        }\n        self.notificacoes_pendentes.append(alerta)\n        return alerta\n\n    def listar_alertas(self):\n        pendentes = self.notificacoes_pendentes\n        self.notificacoes_pendentes = []\n        return pendentes\n\ndef init_gerenciador_popups(base_dir: Path):\n    return GerenciadorPopups(base_dir)\n",
+      "status": "executada",
+      "turn_id": 64,
+      "criada_em": "2026-11-25 15:09:24"
+    },
+    {
+      "id": "16",
+      "tipo": "arquivo",
+      "caminho": "/data/data/com.termux/files/home/Kael_ia/api_server.py",
+      "modo": "criar",
+      "novo_conteudo": "import importlib.util\n\"\"\"\nKAEL API SERVER v5.2 - Com Agente Autônomo de Criação\n\"\"\"\nfrom flask import Flask, request, jsonify, send_from_directory\nfrom flask_cors import CORS\nimport json\nimport os\nimport sys\nimport tempfile\nimport time\nimport threading\nimport re\nfrom pathlib import Path\nimport requests\n\nBASE_DIR = Path(__file__).parent\nif str(BASE_DIR) not in sys.path:\n    sys.path.append(str(BASE_DIR))\n\nfrom core.kael_context import KaelContext\nfrom core.tool_registry import ToolRegistry\nfrom core.autonomous_agent import AutonomousAgent\nfrom core.docs_rag import DocsRagIndex\nfrom core.project_indexer import ProjectIndexer\nfrom core.skill_manager import SkillManager\nfrom core.telemetry import SystemTelemetry\nfrom core.chat_history import validate_chat_history\nfrom core.local_file_workspace import LocalFileWorkspace\nfrom core.attachments import (\n    MAX_ATTACHMENT_CHARS,\n    format_attachments,\n    history_prompt,\n    validate_attachments,\n)\nfrom core.configuration import validate_generation_settings\nfrom core.unified_memory import init_unified_memory, get_unified_memory\nfrom core.creativity_engine import init_creativity_engine, get_creativity_engine\nfrom core.sistema.gerenciador_popups import init_gerenciador_popups\n\n# Boot\nctx = KaelContext()\nregistry = ToolRegistry(ctx)\nctx.registry = registry\nregistry.auto_discover()\n\n# Gerenciador de Pop-ups\nctx.gerenciador_popups = init_gerenciador_popups(BASE_DIR)\n\n# File Manager (criar, modificar, ler arquivos com autorização)\nfrom core.file_manager import init_file_manager\nctx.file_manager = init_file_manager(BASE_DIR)\nprint(\"[OK] File Manager inicializado.\")\n\n# Agente Autônomo\nctx.autonomous_agent = AutonomousAgent(ctx)\nfor _line in (BASE_DIR / \".env\").read_text(encoding=\"utf-8\").splitlines() if (BASE_DIR / \".env\").exists() else []:\n    if \"=\" in _line and not _line.strip().startswith(\"#\"):\n        _k, _v = _line.split(\"=\", 1)\n        os.environ.setdefault(_k.strip(), _v.strip().strip(\"\\\"'\"))\nfrom core.ceo_ai import create_ceo\nctx.ceo = create_ceo(model=ctx.config.get(\"model_name\", \"qwen2.5:1.5b\"))\nfrom core.plugin_loader import KaelPluginManager\nctx.registry = registry\nctx.plugin_manager = KaelPluginManager(BASE_DIR / \"plugins\", BASE_DIR / \"config\" / \"plugins.local.json\")\nctx.plugin_manager.discover_and_load(ctx, registry)\nctx.ceo.plugin_manager = ctx.plugin_manager\nctx.telemetry = SystemTelemetry()\nctx.skills = SkillManager(\n    BASE_DIR / \"skills\",\n    BASE_DIR / \"config\" / \"skills.local.json\",\n)\ntry:\n    ctx.docs_index = DocsRagIndex(ctx.memory_dir / \"docs_rag.sqlite\")\n    print(\"[OK] Índice local de documentação carregado.\")\nexcept Exception as exc:\n    ctx.docs_index = None\n    print(f\"[AVISO] RAG de documentação indisponível: {exc}\")\n\n# Memória Unificada (legado + vetorial + episódica)\ntry:\n    ctx.unified_memory = init_unified_memory(\n        str(BASE_DIR),\n        str(ctx.memory_dir),\n    )\n    print(\"[OK] Memória unificada carregada.\")\nexcept Exception as exc:\n    ctx.unified_memory = None\n    print(f\"[AVISO] Memória unificada indisponível: {exc}\")\n\n# Motor de Criatividade (temperatura adaptativa + síntese de ideias)\ntry:\n    ctx.creativity_engine = init_creativity_engine(str(BASE_DIR))\n    print(\"[OK] Motor de criatividade carregado.\")\nexcept Exception as exc:\n    ctx.creativity_engine = None\n    print(f\"[AVISO] Motor de criatividade indisponível: {exc}\")\n\n\ndef _coletar_diagnostico_kael(texto_usuario: str) -> str:\n    t = (texto_usuario or \"\").lower()\n    if not any(k in t for k in (\"desempenho\", \"latencia\", \"latência\", \"memoria\", \"memória\", \"saude\", \"saúde\", \"lento\", \"rapido\", \"rápido\", \"diagnóst\", \"diagnost\")):\n        return \"\"\n    partes = []\n    try:\n        import subprocess\n        out = subprocess.check_output([\"ps\", \"-ef\"], text=True, stderr=subprocess.DEVNULL)\n        linhas = [ln.strip() for ln in out.splitlines() if any(w in ln.lower() for w in (\"llama-server\", \"kael_app.py\", \"api_server.py\"))]\n        if linhas:\n            partes.append(\"Processos reais em execução:\\n\" + \"\\n\".join(linhas[:6]))\n    except Exception:\n        pass\n    try:\n        import sqlite3\n        for db_p in (Path(\"kael_memory.db\"), Path(\"data/kael_memory.db\"), Path.home() / \"storage\" / \"shared\" / \"Documents\" / \"Kael_ia\" / \"kael_memory.db\"):\n            if db_p.exists():\n                conn = sqlite3.connect(str(db_p))\n                cur = conn.cursor()\n                cur.execute(\"SELECT name FROM sqlite_master WHERE type='table' AND name='memories'\")\n                if cur.fetchone():\n                    cur.execute(\"SELECT COUNT(*) FROM memories\")\n                    total = cur.fetchone()[0]\n                    partes.append(f\"Memória SQLite ({db_p}): {total} registros em 'memories'.\")\n                conn.close()\n                break\n    except Exception:\n        pass\n    try:\n        for r_p in (Path(\"regras_aprendidas.json\"), Path(\"data/regras_aprendidas.json\")):\n            if r_p.exists():\n                txt = r_p.read_text(encoding=\"utf-8\", errors=\"replace\")[:600]\n                partes.append(f\"Regras aprendidas ({r_p}): {txt}\")\n                break\n    except Exception:\n        pass\n    if not partes:\n        return \"\"\n    return (\n        \"\\n\\n[DADOS REAIS DO SISTEMA KAEL - USE ESTES DADOS E NÃO DIGA QUE NÃO TEM ACESSO]:\\n\"\n        + \"\\n\".join(partes)\n    )\n\napp = Flask(__name__)\n\ntry:\n    from scripts.permissoes_kael import (\n        aguardar_decisao,\n        listar_pendentes,\n        resolver_permissao,\n        solicitar_permissao,\n    )\nexcept Exception:\n    aguardar_decisao = None\n    listar_pendentes = None\n    resolver_permissao = None\n    solicitar_permissao = None\n\napi_port = ctx.config[\"api_port\"]\nCORS(app, origins=[\n    f\"http://127.0.0.1:{api_port}\",\n    f\"http://localhost:{api_port}\",\n    f\"http://[::1]:{api_port}\",\n])\n\nGENERATION_SETTINGS_PATH = BASE_DIR / \"config\" / \"generation.local.json\"\n\n\ndef _load_generation_settings():\n    settings = {\n        \"model\": ctx.model_name,\n        \"temperature\": ctx.config[\"temperature\"],\n        \"max_tokens\": ctx.config[\"max_tokens\"],\n        \"think\": ctx.config[\"think\"],\n    }\n    if GENERATION_SETTINGS_PATH.exists():\n        try:\n            with GENERATION_SETTINGS_PATH.open(\"r\", encoding=\"utf-8\") as file:\n                saved = json.load(file)\n        except (OSError, UnicodeError, json.JSONDecodeError) as exc:\n            raise RuntimeError(f\"Falha ao ler configurações locais de geração: {exc}\") from exc\n        if not isinstance(saved, dict):\n            raise RuntimeError(\"generation.local.json deve conter um objeto JSON.\")\n        settings.update(saved)\n    environment_settings = {\n        \"KAEL_MODEL\": \"model\",\n        \"KAEL_TEMPERATURE\": \"temperature\",\n        \"KAEL_MAX_TOKENS\": \"max_tokens\",\n        \"KAEL_THINK\": \"think\",\n    }\n    for environment_key, setting_key in environment_settings.items():\n        if environment_key in os.environ:\n            config_key = {\n                \"model\": \"model_name\",\n                \"max_tokens\": \"max_tokens\",\n                \"temperature\": \"temperature\",\n                \"think\": \"think\",\n            }[setting_key]\n            settings[setting_key] = ctx.config[config_key]\n    try:\n        return validate_generation_settings(settings)\n    except ValueError as exc:\n        raise RuntimeError(f\"Configuração local de geração inválida: {exc}\") from exc\n\n\ndef _save_generation_settings(settings):\n    GENERATION_SETTINGS_PATH.parent.mkdir(parents=True, exist_ok=True)\n    temp_path = None\n    try:\n        with tempfile.NamedTemporaryFile(\n            \"w\",\n            encoding=\"utf-8\",\n            dir=GENERATION_SETTINGS_PATH.parent,\n            prefix=\".generation-\",\n            suffix=\".tmp\",\n            delete=False,\n        ) as file:\n            temp_path = Path(file.name)\n            json.dump(settings, file, ensure_ascii=False, indent=2)\n            file.flush()\n            os.fsync(file.fileno())\n        os.replace(temp_path, GENERATION_SETTINGS_PATH)\n    except OSError:\n        if temp_path and temp_path.exists():\n            temp_path.unlink()\n        raise\n\n\nctx.generation_settings = _load_generation_settings()\ngeneration_settings_lock = threading.Lock()\n\n\ndef _available_ollama_models():\n    try:\n        response = requests.get(f\"{ctx.ollama_url}/api/tags\", timeout=3)\n        response.raise_for_status()\n        payload = response.json()\n    except (requests.RequestException, ValueError) as exc:\n        raise ConnectionError(f\"Não foi possível consultar os modelos locais do Ollama: {exc}\") from exc\n    models = payload.get(\"models\") if isinstance(payload, dict) else None\n    if not isinstance(models, list):\n        raise ConnectionError(\"O Ollama retornou uma lista de modelos inválida.\")\n    names = sorted({\n        item[\"name\"] for item in models\n        if isinstance(item, dict) and isinstance(item.get(\"name\"), str) and item[\"name\"]\n    })\n    return names\n\n# Plugin Bridge\ntry:\n    from core.plugin_bridge import register_routes\n    register_routes(app, ctx)\n    print(\"[OK] Plugin Bridge registrado.\")\nexcept Exception as e:\n    print(f\"[AVISO] Plugin Bridge desativado: {e}\")\n\nprint(\"\\n\" + \"=\" * 60)\nprint(\"🚨 [KAEL] API SERVER v5.2 RODANDO NA PORTA 8000 🚨\")\nprint(f\"🎮 Projeto: {ctx.project_path}\")\nprint(f\"🔧 Registry: {len(registry.tools)} tools | {len(registry.commands)} comandos\")\nprint(f\"🤖 Agente Autônomo: {'✅ ATIVO' if ctx.autonomous_agent.active else '⚪ Inativo'}\")\nprint(\"=\" * 60 + \"\\n\")\n\n# Loop do agente autônomo\ndef autonomous_loop():\n    while True:\n        if ctx.autonomous_agent.active:\n            ctx.autonomous_agent.run_cycle()\n        time.sleep(3)\n\nthreading.Thread(target=autonomous_loop, daemon=True).start()\n\n@app.route('/', methods=['GET'])\ndef chat_ui():\n    tpl = BASE_DIR / \"templates\" / \"kael_chat.html\"\n    if tpl.is_file():\n        return send_from_directory(BASE_DIR / \"templates\", \"kael_chat.html\")\n    return send_from_directory(BASE_DIR / \"ui\", \"chat.html\")\n\n@app.route('/health', methods=['GET'])\ndef health():\n    return jsonify({\n        \"status\": \"online\" if ctx.ollama_online() else \"ollama_offline\",\n        \"tools\": sorted(registry.tools.keys()),\n        \"commands\": sorted(registry.commands.keys()),\n        \"autonomous_mode\": ctx.autonomous[\"active\"],\n        \"autonomous_agent\": ctx.autonomous_agent.get_status(),\n        \"pending_approvals\": len(registry.pending_approvals),\n        \"permission_policy\": ctx.permission_policy.public_state(),\n        \"telemetry\": ctx.telemetry.snapshot(),\n        \"memoria_unificada\": bool(ctx.unified_memory),\n        \"motor_criatividade\": bool(ctx.creativity_engine),\n    })\n\n@app.route('/models', methods=['GET'])\ndef list_local_models():\n    try:\n        models = _available_ollama_models()\n    except ConnectionError as exc:\n        return jsonify({\"error\": str(exc)}), 503\n    return jsonify({\n        \"models\": models,\n        \"selected\": ctx.generation_settings[\"model\"],\n    })\n\n@app.route('/settings/generation', methods=['GET'])\ndef get_generation_settings():\n    with generation_settings_lock:\n        settings = dict(ctx.generation_settings)\n    locked = [\n        setting for environment_key, setting in (\n            (\"KAEL_MODEL\", \"model\"),\n            (\"KAEL_TEMPERATURE\", \"temperature\"),\n            (\"KAEL_MAX_TOKENS\", \"max_tokens\"),\n            (\"KAEL_THINK\", \"think\"),\n        )\n        if environment_key in os.environ\n    ]\n    return jsonify({\n        \"settings\": settings,\n        \"locked\": locked,\n        \"limits\": {\n            \"temperature\": {\"min\": 0, \"max\": 2, \"step\": 0.1},\n            \"max_tokens\": {\"min\": 64, \"max\": 8192, \"step\": 64},\n        },\n    })\n\n@app.route('/settings/generation', methods=['POST'])\ndef update_generation_settings():\n    data = request.get_json(silent=True)\n    if not isinstance(data, dict) or not data:\n        return jsonify({\"error\": \"Informe ao menos uma configuração de geração.\"}), 400\n    with generation_settings_lock:\n        candidate = dict(ctx.generation_settings)\n        locked = {\n            setting for environment_key, setting in (\n                (\"KAEL_MODEL\", \"model\"),\n                (\"KAEL_TEMPERATURE\", \"temperature\"),\n                (\"KAEL_MAX_TOKENS\", \"max_tokens\"),\n                (\"KAEL_THINK\", \"think\"),\n            )\n            if environment_key in os.environ\n        }\n        if any(data[key] != candidate[key] for key in locked if key in data):\n            return jsonify({\n                \"error\": \"Uma ou mais configurações são controladas por variáveis de ambiente.\",\n                \"locked\": sorted(locked),\n            }), 400\n        models = None\n        if \"model\" in data and data[\"model\"] != candidate[\"model\"]:\n            try:\n                models = _available_ollama_models()\n            except ConnectionError as exc:\n                return jsonify({\"error\": str(exc)}), 503\n        candidate.update(data)\n        try:\n            validated = validate_generation_settings(candidate, models)\n        except ValueError as exc:\n            return jsonify({\"error\": str(exc)}), 400\n        try:\n            _save_generation_settings(validated)\n        except OSError as exc:\n            print(f\"[CONFIG] Falha ao salvar configurações de geração: {exc}\")\n            return jsonify({\"error\": \"Não foi possível salvar as configurações locais.\"}), 500\n        ctx.generation_settings = validated\n        ctx.model_name = validated[\"model\"]\n    return jsonify({\"settings\": validated})\n\n@app.route('/settings/autonomy', methods=['GET'])\ndef get_autonomy_settings():\n    return jsonify(ctx.permission_policy.public_state())\n\n@app.route('/settings/autonomy', methods=['POST'])\ndef update_autonomy_settings():\n    data = request.get_json(silent=True)\n    if not isinstance(data, dict):\n        return jsonify({\"error\": \"O corpo da solicitação deve ser um objeto JSON.\"}), 400\n    mode = data.get(\"mode\")\n    try:\n        ctx.permission_policy.set_mode(mode)\n    except ValueError as exc:\n        return jsonify({\"error\": str(exc)}), 400\n    except OSError as exc:\n        print(f\"[PERMISSAO] Falha ao persistir o nível de autorização: {exc}\")\n        return jsonify({\"error\": \"Não foi possível salvar o nível de autorização localmente.\"}), 500\n    return jsonify(ctx.permission_policy.public_state())\n\n@app.route('/filesystem/folders', methods=['GET'])\ndef list_trusted_folders():\n    state = ctx.permission_policy.public_state()\n    return jsonify({\"folders\": state[\"trusted_folders\"]})\n\n@app.route('/filesystem/folders/authorize', methods=['POST'])\ndef authorize_file_folder():\n    data = request.get_json(silent=True)\n    if not isinstance(data, dict):\n        return jsonify({\"error\": \"Informe o caminho da pasta.\"}), 400\n    try:\n        folder = ctx.permission_policy.validate_trusted_folder(data.get(\"path\"))\n    except ValueError as exc:\n        return jsonify({\"error\": str(exc)}), 400\n    if ctx.permission_policy.is_trusted_directory(folder):\n        return jsonify({\"status\": \"already_authorized\", \"folder\": folder})\n\n    permission = registry.create_approval(\n        title=\"Autorizar pasta local\",\n        summary=f\"Permitir acesso aos arquivos diretamente nesta pasta: {folder}\",\n        details=(\n            \"A autorização vale para leitura e escrita controladas no workspace. \"\n            \"Você pode revogar a autorização a qualquer momento.\"\n        ),\n        action_type=\"auth_folder\",\n        payload={\"folder\": folder},\n    )\n    return jsonify({\n        \"status\": \"pending_approval\",\n        \"approval_id\": permission[\"id\"],\n        \"folder\": folder,\n    })\n\n@app.route('/approvals/pending', methods=['GET'])\ndef list_pending_approvals():\n    approvals = registry.list_pending_approvals()\n    return jsonify({\"pending\": approvals})\n\n@app.route('/approvals/<approval_id>/resolve', methods=['POST'])\ndef resolve_approval(approval_id):\n    data = request.get_json(silent=True) or {}\n    accept = bool(data.get(\"accept\", False))\n    result = registry.resolve_approval(approval_id, accept)\n    if not result:\n        return jsonify({\"error\": \"Solicitação não encontrada ou já resolvida.\"}), 404\n    return jsonify({\"status\": \"resolved\", \"approval\": result})\n\n@app.route('/chat', methods=['POST'])\ndef chat():\n    body = request.get_json(silent=True) or {}\n    user_message = str(body.get(\"message\", \"\")).strip()\n    history = body.get(\"history\", [])\n    override_project_path = str(body.get(\"project_path\", \"\")).strip()\n\n    if override_project_path:\n        try:\n            ctx.set_project_path(override_project_path)\n        except Exception:\n            pass\n\n    if not user_message and not history:\n        return jsonify({\"error\": \"Mensagem ou histórico ausente.\"}), 400\n\n    chat_history = []\n    if history:\n        try:\n            chat_history = validate_chat_history(history)\n        except ValueError as exc:\n            return jsonify({\"error\": str(exc)}), 400\n\n    attachments = body.get(\"attachments\", [])\n    if attachments:\n        try:\n            attachments = validate_attachments(attachments)\n        except ValueError as exc:\n            return jsonify({\"error\": str(exc)}), 400\n\n    diagnostico_adicional = _coletar_diagnostico_kael(user_message)\n    if diagnostico_adicional:\n        user_message += diagnostico_adicional\n\n    attachment_text = format_attachments(attachments)\n    full_user_content = attachment_text + user_message\n\n    messages = history_prompt(chat_history)\n    if full_user_content:\n        messages.append({\"role\": \"user\", \"content\": full_user_content})\n\n    system_prompt = ctx.build_system_prompt()\n    payload_messages = [{\"role\": \"system\", \"content\": system_prompt}] + messages\n\n    temperature = ctx.generation_settings[\"temperature\"]\n    max_tokens = ctx.generation_settings[\"max_tokens\"]\n    model = ctx.generation_settings[\"model\"]\n    think = ctx.generation_settings[\"think\"]\n\n    if ctx.creativity_engine:\n        try:\n            suggested_temp = ctx.creativity_engine.adapt_temperature(user_message, temperature)\n            if suggested_temp is not None:\n                temperature = suggested_temp\n        except Exception:\n            pass\n\n    request_payload = {\n        \"model\": model,\n        \"messages\": payload_messages,\n        \"stream\": False,\n        \"options\": {\n            \"temperature\": temperature,\n            \"num_predict\": max_tokens,\n        },\n    }\n    if not think:\n        request_payload[\"options\"][\"think\"] = False\n\n    try:\n        response = requests.post(f\"{ctx.ollama_url}/v1/chat/completions\", json=request_payload, timeout=120)\n        response.raise_for_status()\n        res_data = response.json()\n    except (requests.RequestException, ValueError) as exc:\n        print(f\"[CHAT] Erro ao comunicar com o Ollama: {exc}\")\n        return jsonify({\"error\": f\"Erro de comunicação com o Ollama local: {exc}\"}), 502\n\n    message_obj = res_data.get(\"message\", {})\n    assistant_reply = message_obj.get(\"content\", \"\").strip()\n\n    tool_results = registry.execute_tools_from_response(assistant_reply)\n    if tool_results:\n        assistant_reply += \"\\n\\n\" + \"\\n\".join(tool_results)\n\n    if ctx.unified_memory and user_message:\n        try:\n            ctx.unified_memory.store_memory(\n                user_message,\n                assistant_reply,\n                metadata={\"source\": \"chat\", \"project\": str(ctx.project_path)}\n            )\n        except Exception:\n            pass\n\n    return jsonify({\n        \"reply\": assistant_reply,\n        \"pending_approvals\": len(registry.pending_approvals),\n    })\n\nif __name__ == '__main__':\n    app.run(host='0.0.0.0', port=api_port, debug=False)\n",
+      "status": "executada",
+      "turn_id": 66,
+      "criada_em": "2026-11-25 15:14:53"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "mode": "supervised",
+  "trusted_folders": [
+    "/data/data/com.termux/files/home/Projetos"
+  ]
+}
