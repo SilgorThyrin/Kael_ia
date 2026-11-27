@@ -47,7 +47,7 @@ def _kael_acordar_llama_8080(espera_max_s: float = 15.0) -> bool:
 
     try:
         _kael_sp.Popen(
-            ["llama-server", "-m", str(modelo), "--host", "127.0.0.1", "--port", "8080", "-c", "2048"],
+            ['/data/data/com.termux/files/home/llama.cpp/build/bin/llama-server', "-m", str(modelo), "--host", "127.0.0.1", "--port", "8080", "-c", "2048"],
             stdout=_kael_sp.DEVNULL,
             stderr=_kael_sp.DEVNULL,
             start_new_session=True,
@@ -65,96 +65,76 @@ def _kael_acordar_llama_8080(espera_max_s: float = 15.0) -> bool:
     return _porta_aberta()
 
 
-def _kael_pensar_e_responder_com_ia(msg: str) -> tuple[str, str]:
-    import json as _j, py_compile as _pyc, requests as _req
-    raiz = Path.home() / "Kael_ia"
-    ecos = Path.home() / "Projetos" / "Ecos_de_Aethelgard"
-    alvo = ecos if any(k in msg.lower() for k in ("ecos", "aethelgard", "roblox", "luau", ".lua")) else raiz
+def _kael_pensar_e_responder_com_ia(msg: str, think: bool = True, web_search: bool = False, voice_mode: bool = False) -> tuple[str, str]:
+    import re as _re
+    low = (msg or "").lower()
+    eh_codigo = any(w in low for w in ("erro", "sintaxe", "bug", "traceback", "python", "código", "codigo", "luau", "lua", "compilar", "script", "revisar"))
 
-    # 1) Coleta contexto real rápido (últimas mensagens + eventuais erros de sintaxe)
-    hist_txt = ""
-    hist_file = raiz / "data" / "chat_historico.json"
-    if hist_file.exists():
-        try:
-            itens = _j.loads(hist_file.read_text(encoding="utf-8", errors="ignore"))
-            if isinstance(itens, list):
-                ult = itens[-6:]
-                hist_txt = "\n".join(f"{x.get('role','user')}: {str(x.get('content',''))[:280]}" for x in ult)
-        except Exception:
-            pass
+    # Define alvo apenas se explicitado ou se for pedido técnico do projeto
+    m_path = _re.search(r"(/[A-Za-z0-9_./-]+|~/[A-Za-z0-9_./-]+)", msg or "")
+    if m_path:
+        alvo = Path(m_path.group(1)).expanduser()
+    elif any(k in low for k in ("aethelgard", "roblox", "luau", "mount", "fasttravel", "trade")):
+        alvo = Path.home() / "Projetos" / "Ecos_de_Aethelgard"
+    elif eh_codigo:
+        alvo = Path.home() / "Kael_ia"
+    else:
+        alvo = None
 
-    erros_atuais = []
-    for pf in raiz.rglob("*.py"):
-        if any(p in pf.parts for p in ("build_termux", "__pycache__", ".git")):
-            continue
-        try:
-            _pyc.compile(str(pf), doraise=True)
-        except Exception as e:
-            erros_atuais.append(f"{pf.relative_to(raiz)}: {e}")
+    etapas = [f"Analisando pedido: {msg.strip()[:120]}"]
+    contexto_extra = []
 
-    pensamento = (
-        f"Alvo ativo: {alvo}\n"
-        f"Contexto recente carregado ({len(hist_txt)} chars).\n"
-        f"Checagem rápida de sintaxe Python: {len(erros_atuais)} erro(s) encontrado(s).\n"
-        "Consultando modelo de IA para formular a resposta..."
-    )
+    if alvo is not None:
+        etapas.append(f"Alvo ativo: {alvo}")
+        if eh_codigo and alvo.exists():
+            erros = []
+            for pyf in list(alvo.rglob("*.py"))[:80]:
+                if ".git" in pyf.parts or "__pycache__" in pyf.parts:
+                    continue
+                try:
+                    compile(pyf.read_text(encoding="utf-8", errors="replace"), str(pyf), "exec")
+                except SyntaxError as se:
+                    erros.append(f"{pyf.name}:{se.lineno}: {se.msg}")
+            etapas.append(f"Checagem de sintaxe Python: {len(erros)} erro(s).")
+            if erros:
+                contexto_extra.append("Erros de sintaxe encontrados:\n" + "\n".join(erros[:10]))
+
+    if "_kael_acordar_llama_8080" in globals():
+        etapas.append("Verificando motor local (porta 8080)...")
+        _kael_acordar_llama_8080(20.0)
 
     sys_prompt = (
-        "Você é o Kael, engenheiro de software autônomo rodando no Termux (Android). "
-        f"Diretório alvo: {alvo}. "
-        f"Erros de sintaxe atuais em ~/Kael_ia: {erros_atuais if erros_atuais else 'nenhum erro de sintaxe'}. "
-        "Responda diretamente em português, de forma técnica, útil e baseada nos dados reais fornecidos."
+        "Você é o Kael AI, assistente técnico objetivo em português do Brasil. "
+        "Responda diretamente ao pedido do usuário com clareza, sem inventar dados e sem repetir logs internos."
     )
-    user_prompt = f"Histórico recente:\n{hist_txt}\n\nPergunta atual do usuário: {msg}" if hist_txt else msg
+    if voice_mode:
+        sys_prompt += " Modo voz ativo: use frases curtas, diretas e naturais para leitura em voz alta."
+    if contexto_extra:
+        sys_prompt += "\n\nContexto técnico verificado:\n" + "\n".join(contexto_extra)
 
-    # 2) Tenta trabalhadores/APIs externas primeiro se disponível
     try:
-        _fn_trab = globals().get("tentar_executar_trabalhadores")
-        if _fn_trab is None:
-            from core.executor_trabalhadores import tentar_executar_trabalhadores as _fn_trab
-        if callable(_fn_trab):
-            _kael_set_etapa("pensando via trabalhadores/IA")
-            out = _fn_trab(user_prompt, system_prompt=sys_prompt)
-            if isinstance(out, dict):
-                out = out.get("resposta") or out.get("reply") or out.get("text") or ""
-            if out and isinstance(out, str) and out.strip():
-                return pensamento, out.strip()
-    except Exception:
-        pass
-
-    # 3) Acorda o llama-server na porta 8080 sob demanda se estiver dormindo
-    _kael_acordar_llama_8080(15.0)
-    _kael_set_etapa("pensando via modelo local 8080")
-    try:
-        resp = _req.post(
+        r = requests.post(
             "http://127.0.0.1:8080/v1/chat/completions",
             json={
+                "model": "modelo_local.gguf",
                 "messages": [
-                    {"role": "system", "content": sys_prompt[:900]},
-                    {"role": "user", "content": user_prompt[:900]},
+                    {"role": "system", "content": sys_prompt},
+                    {"role": "user", "content": msg},
                 ],
-                "max_tokens": 256,
-                "temperature": 0.2,
+                "temperature": 0.3,
+                "max_tokens": 700,
             },
-            timeout=22,
+            timeout=90,
         )
-        if resp.status_code == 200:
-            data = resp.json()
-            txt_ia = (((data.get("choices") or [{}])[0].get("message") or {}).get("content") or "").strip()
-            if txt_ia:
-                return pensamento, txt_ia
-    except Exception as e:
-        if erros_atuais:
-            return pensamento, "Arquivos com erro encontrados agora:\n- " + "\n- ".join(erros_atuais)
-        return pensamento, f"O modelo local 8080 não respondeu a tempo ({e}), mas não há erros de sintaxe Python em ~/Kael_ia."
+        r.raise_for_status()
+        data = r.json()
+        resp = ((data.get("choices") or [{}])[0].get("message") or {}).get("content", "").strip()
+        if not resp:
+            resp = "O modelo local processou o pedido, mas retornou resposta vazia."
+    except Exception as exc:
+        resp = f"Não foi possível obter resposta do modelo local na porta 8080 ({exc})."
 
-    if erros_atuais:
-        return pensamento, "Arquivos com erro encontrados agora:\n- " + "\n- ".join(erros_atuais)
-    return pensamento, "Não há erros de sintaxe Python em ~/Kael_ia no momento."
-
-
-_KAEL_ULTIMO_AVISO_TRAVA = ""
-
+    return "\n".join(etapas), resp
 def _kael_montar_resposta_travamento(motivo="tempo limite excedido"):
     with _KAEL_TURNO_LOCK:
         etapa = _KAEL_TURNO_STATE.get("etapa") or "desconhecida"
