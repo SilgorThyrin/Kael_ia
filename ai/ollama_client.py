@@ -145,9 +145,12 @@ def generate_response(
             if not raw_bytes:
                 continue
             raw_line = raw_bytes.decode("utf-8", errors="replace")
-            if not raw_line.startswith("data:"):
+            if raw_line.startswith("data:"):
+                data_str = raw_line[5:].strip()
+            elif raw_line.lstrip().startswith("{"):
+                data_str = raw_line.strip()
+            else:
                 continue
-            data_str = raw_line[5:].strip()
             if data_str == "[DONE]":
                 break
             try:
@@ -156,6 +159,8 @@ def generate_response(
                 continue
 
             choices = chunk.get("choices") or []
+            if not choices and isinstance(chunk, dict) and "response" in chunk:
+                choices = [{"delta": {"content": chunk.get("response") or ""}}]
             if not choices:
                 continue
             delta = choices[0].get("delta") or {}

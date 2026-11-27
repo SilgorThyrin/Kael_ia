@@ -8,7 +8,7 @@ class OllamaClientTests(unittest.TestCase):
     @patch("ai.ollama_client.check_ollama_status")
     @patch("ai.ollama_client.requests.post")
     @patch("ai.ollama_client.load_config")
-    def test_selected_generation_settings_are_sent_to_ollama(
+    def test_selected_generation_settings_are_sent_to_llamacpp(
         self, load_config, post, check_status
     ):
         load_config.return_value = {
@@ -21,8 +21,8 @@ class OllamaClientTests(unittest.TestCase):
         }
         response = Mock()
         response.iter_lines.return_value = [
-            b'{"response":"Hello"}',
-            b'{"done":true}',
+            b'data: {"choices":[{"delta":{"content":"Hello"}}]}',
+            b"data: [DONE]",
         ]
         post.return_value = response
         response.raise_for_status.return_value = None
@@ -40,11 +40,8 @@ class OllamaClientTests(unittest.TestCase):
         self.assertEqual(result["response"], "Hello")
         payload = post.call_args.kwargs["json"]
         self.assertEqual(payload["model"], "qwen3:8b")
-        self.assertEqual(payload["options"], {
-            "temperature": 0.4,
-            "num_predict": 512,
-            "think": False,
-        })
+        self.assertEqual(payload["temperature"], 0.4)
+        self.assertEqual(payload["max_tokens"], 512)
         post.assert_called_once()
         check_status.assert_not_called()
 
