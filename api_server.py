@@ -1,4 +1,24 @@
 
+def _kael_explorar_pastas_local(msg: str) -> tuple[str, str]:
+    import re as _re
+    m = _re.search(r"(/[A-Za-z0-9_./-]+)", msg)
+    alvo = Path(m.group(1)) if m else Path("/storage/emulated/0")
+    if not alvo.exists():
+        alvo = Path.home()
+    bloqueados = ("/system", "/proc", "/sys", "/dev")
+    if any(str(alvo).startswith(b) for b in bloqueados):
+        return "Verificando política de segurança...", "Acesso bloqueado apenas para partições protegidas do sistema (/system, /proc, /sys)."
+    itens = sorted(alvo.iterdir(), key=lambda p: (not p.is_dir(), p.name.lower()))[:60]
+    linhas = ["| Tipo | Nome | Tamanho |", "| --- | --- | --- |"]
+    for it in itens:
+        tipo = "Pasta" if it.is_dir() else "Arquivo"
+        tam = "-" if it.is_dir() else f"{it.stat().st_size} B"
+        linhas.append(f"| {tipo} | `{it.name}` | {tam} |")
+    pens = f"Acessando diretório {alvo}...\nEncontrados {len(itens)} itens visíveis."
+    resp = f"Conteúdo de `{alvo}`:\n\n" + "\n".join(linhas)
+    return pens, resp
+
+
 def _kael_acordar_llama_8080(espera_max_s: float = 15.0) -> bool:
     import socket as _sock
     def _porta_aberta():
@@ -2155,7 +2175,11 @@ def kael_chat_stream():
                 yield _kael_sse({"type": "done", "text": res})
                 return
 
-            if any(k in low for k in ("vírus", "virus", "malware", "escanear", "varredura")):
+            if any(k in low for k in ("listar pastas", "pastas do celular", "/storage/emulated/0", "/sdcard", "arquivos do celular")):
+                _p_dir, _r_dir = _kael_explorar_pastas_local(msg)
+                yield _kael_sse({"type": "thinking", "text": _p_dir + "\n"})
+                yield _kael_sse({"type": "content", "text": _r_dir + "\n"})
+            elif any(k in low for k in ("vírus", "virus", "malware", "escanear", "varredura")):
                 yield _kael_sse({"type": "thinking", "text": "Iniciando varredura local nas pastas permitidas...\n"})
                 _kael_set_etapa("varrendo pastas locais")
                 res = _varrer_arquivos_locais_seguro()
